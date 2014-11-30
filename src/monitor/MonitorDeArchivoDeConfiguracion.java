@@ -12,11 +12,11 @@ import java.util.*;
  *
  * @author Vanessa
  */
-public abstract class Monitor extends TimerTask{
+public abstract class MonitorDeArchivoDeConfiguracion extends TimerTask{
       private long timeStamp;
       private File file;
 
-      public Monitor( File file ) {
+      public MonitorDeArchivoDeConfiguracion( File file ) {
         this.file = file;
         this.timeStamp = file.lastModified();
       }

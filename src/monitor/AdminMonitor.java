@@ -22,20 +22,24 @@ public class AdminMonitor {
 
     public AdminMonitor() {
         this.timer = new Timer();
-        informacion = new DatosModificados();
+        informacion = new DatosBD();
     }
 
-    public DatosModificados getInformacion() {
+    public DatosBD getInformacion() {
         return informacion;
     }
-
+    
+    /**
+     * Metodo que checa si el archivo configuracionBD.txt,
+     * @throws IOException 
+     */
     public void checkFile() throws IOException {
 
-        File configuracion = new File("configuracion.txt");
+        File configuracion = new File("configuracionBD.txt");
 
         System.out.println("Empezó la verificación");
 
-        TimerTask task = new Monitor(configuracion) {
+        TimerTask task = new MonitorDeArchivoDeConfiguracion(configuracion) {
 
             @Override
             protected void onChange(File file) {
@@ -65,14 +69,19 @@ public class AdminMonitor {
     public boolean hayModificacion() {
         return modificacion;
     }
+    
+    /**
+     * Metodo que lee el archivo de configuracion y setea los campos con su respectivo dato
+     * @return 
+     */
 
-    public DatosModificados inicializarConexiones() {
+    public DatosBD cargarConfiguracion() {
         FileReader cambios;
         String[] configuracion;
         String linea, ip, name, password, user;
         int port, pool = 0;
         try {
-            cambios = new FileReader("configuracion.txt");
+            cambios = new FileReader("configuracionBD.txt");
             BufferedReader br = new BufferedReader(cambios);
             try {
                 //La primera línea corresponde al tamaño del pool
@@ -115,8 +124,12 @@ public class AdminMonitor {
         this.modificacion = modificacion;
     }
 
-    DatosModificados informacion = null;
-
+    DatosBD informacion = null;
+    /**
+     * Metodo que  actualiza cambios en la variable informacion
+     * @param file
+     * @throws IOException 
+     */
     public void getCambios(File file) throws IOException {
         FileReader cambios;
         String[] configuracion;
@@ -152,8 +165,8 @@ public class AdminMonitor {
         }
     }
 
-    private DatosModificados crearCambio(int tamPool, String nombreBD, String ip, int puerto, String usuario, String password) {
-        return new DatosModificados(tamPool, nombreBD, ip, puerto, usuario, password);
+    private DatosBD crearCambio(int tamPool, String nombreBD, String ip, int puerto, String usuario, String password) {
+        return new DatosBD(tamPool, nombreBD, ip, puerto, usuario, password);
     }
 
     //esta función debes implementarla para checar la conexión según el criterio 

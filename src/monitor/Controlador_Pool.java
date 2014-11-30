@@ -12,6 +12,7 @@ package monitor;
 public class Controlador_Pool {
     private PoolManager manager = new PoolManager();
     
+    
     public void iniciarPool(){
         manager.start();
     }

@@ -19,11 +19,16 @@ public class PoolManager extends Thread {
     private ArrayList<ConexionBD> conexiones;
     private AdminMonitor monitor;
     
+    /**
+     * Constructor que se encarga de inicializar el pool con las conexiones segun el archivo,
+     * la informacion con los datos del archivo, y thread que checa cada 5 segundos el archivo 
+     * para confirmar si hay cambios
+     */
     public PoolManager() {
         try {
             this.conexiones = new ArrayList();
             monitor = new AdminMonitor();
-            info =monitor.inicializarConexiones();
+            info =monitor.cargarConfiguracion();
             init(info);
             
             monitor.checkFile();
@@ -32,14 +37,17 @@ public class PoolManager extends Thread {
         }
     }
 
-    public void init(DatosModificados informacion){
+    public void init(DatosBD informacion){
         actualizarPool(informacion.getTamPool());
     }
     
     
     
-    private DatosModificados info = new DatosModificados();
-    
+    private DatosBD info = new DatosBD();
+    /**
+     * Este es el que esta checando cada 5 segundos si el documento de configuracion
+     * cambio
+     */
     public void run() {
         while(true){
             try {
@@ -62,11 +70,19 @@ public class PoolManager extends Thread {
         }
     }
     
-    public void actualizar(DatosModificados nuevo){
+    /**
+     * 
+     * @param nuevo Metodo que actualiza el pool
+     */
+    public void actualizar(DatosBD nuevo){
         actualizarPool(nuevo.getTamPool());
     }
     
-    private void setChangesOnConexion(DatosModificados nuevo){
+    /**
+     * Cuando detecta un cambio, setea los nuevos datos del archivo de configuracion
+     * @param nuevo 
+     */
+    private void setChangesOnConexion(DatosBD nuevo){
         for(ConexionBD conexion : conexiones){
             conexion.setHOST(nuevo.getIp());
             conexion.setNombreBD(nuevo.getNombreBD());
@@ -76,6 +92,10 @@ public class PoolManager extends Thread {
         }
     }
 
+    /**
+     * Crea las demas conexiones que faltan
+     * @param cantidadPool 
+     */
     private void actualizarPool(int cantidadPool) {
         int cantidadActual = conexiones.size();
 
@@ -104,6 +124,11 @@ public class PoolManager extends Thread {
         }
     }
 
+    /**
+     * Crea las nuevas conexiones con los datos que tiene sobre la bd,
+     * la cantidad nos dice cuantas conexiones seran
+     * @param cantidad 
+     */
     private void crearNuevasConexiones(int cantidad) {
         while (conexiones.size() < cantidad) {
             //!!!!!!!!!!!
@@ -113,6 +138,10 @@ public class PoolManager extends Thread {
         }
     }
     
+    /**
+     * Devuelve una conexion que no esta activa.
+     * @return 
+     */
     public ConexionBD brindarConexion(){
         for(ConexionBD conexion : conexiones){
             if(!conexion.IsActivo()){

@@ -9,15 +9,15 @@ package monitor;
  *
  * @author Oscar
  */
-public class DatosModificados {
+public class DatosBD {
     private int tamPool;
     private String nombreBD,ip, usuario,password;
     private int puerto;
 
-    public DatosModificados() {
+    public DatosBD() {
     }
 
-    public DatosModificados(int tamPool, String nombreBD, String ip, int puerto,String usuario, String password) {
+    public DatosBD(int tamPool, String nombreBD, String ip, int puerto,String usuario, String password) {
         this.tamPool = tamPool;
         this.nombreBD = nombreBD;
         this.ip = ip;
