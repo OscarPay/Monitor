@@ -119,9 +119,7 @@ public class PoolManager extends Thread {
 
         } else if (cantidadPool > cantidadActual) {
             crearNuevasConexiones(cantidadPool);
-        } else {
-            return;
-        }
+        } 
     }
 
     /**
