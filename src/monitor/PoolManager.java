@@ -15,10 +15,10 @@ import java.util.logging.Logger;
  * @author Oscar
  */
 public class PoolManager extends Thread {
-    
-    private ArrayList<ConexionBD> conexiones;
+
+    private ArrayList<DatosBD> conexiones;
     private AdminMonitor monitor;
-    private DatosBD info = new DatosBD();
+    private DatosBD informacionBD = new DatosBD();
 
     /**
      * Constructor que se encarga de inicializar el pool con las conexiones
@@ -27,18 +27,21 @@ public class PoolManager extends Thread {
      */
     public PoolManager() {
         try {
-            this.conexiones = new ArrayList();
+
+            this.conexiones = new ArrayList<>();
             monitor = new AdminMonitor();
-            info = monitor.cargarConfiguracion();
-            init(info);
-            
+
+            informacionBD = monitor.cargarConfiguracion();
+            iniciarPool(informacionBD);
+
             monitor.checkFile();
+
         } catch (IOException ex) {
             Logger.getLogger(PoolManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void init(DatosBD informacion) {
+
+    private void iniciarPool(DatosBD informacion) {
         actualizarPool(informacion.getTamPool());
     }
 
@@ -46,25 +49,24 @@ public class PoolManager extends Thread {
      * Este es el que esta checando cada 5 segundos si el documento de
      * configuracion cambió.
      */
+    @Override
     public void run() {
         while (true) {
             try {
                 Thread.sleep(5000);
                 if (monitor.hayModificacion()) {
                     monitor.setModificacion(false);
-                    System.out.println("antes de los cambios:");
-                    System.out.println(conexiones);
-                    info = monitor.getInformacion();
-                    actualizar(info);
-                    setChangesOnConexion(info);
-                    System.out.println("despuees de los cambios");
-                    System.out.println(conexiones);
+
+                    informacionBD = monitor.getInformacion();
+                    actualizar(informacionBD);
+
+                    hacerCambiosEnConexion(informacionBD);
                 }
-                
+
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
-            
+
         }
     }
 
@@ -78,35 +80,19 @@ public class PoolManager extends Thread {
     }
 
     /**
-     * Cuando detecta un cambio, setea los nuevos datos del archivo de
-     * configuracion
-     *
-     * @param nuevo
-     */
-    private void setChangesOnConexion(DatosBD nuevo) {
-        for (ConexionBD conexion : conexiones) {
-            conexion.setHOST(nuevo.getIp());
-            conexion.setNombreBD(nuevo.getNombreBD());
-            conexion.setPORT(nuevo.getPuerto());
-            conexion.setPassword(nuevo.getPassword());
-            conexion.setUsuario(nuevo.getUsuario());
-        }
-    }
-
-    /**
      * Crea las demas conexiones que faltan
      *
      * @param cantidadPool
      */
     private void actualizarPool(int cantidadPool) {
         int cantidadActual = conexiones.size();
-        
+
         if (cantidadPool < cantidadActual) {
             //se reduce
-            ArrayList<ConexionBD> conexionesNuevas = new ArrayList();
-            for (ConexionBD conexion : conexiones) {
+            ArrayList<DatosBD> conexionesNuevas = new ArrayList<>();
+            for (DatosBD conexion : conexiones) {
                 //!!!!!!!!Verificar
-                if (!conexion.IsActivo()) {
+                if (!conexion.isIsActivo()) {
                     conexionesNuevas.add(conexion);
                     if (conexionesNuevas.size() == cantidadPool) {
                         break;
@@ -114,13 +100,29 @@ public class PoolManager extends Thread {
                 }
             }
             conexiones = conexionesNuevas;
-            
+
             if (conexiones.size() < cantidadPool) {
                 crearNuevasConexiones(cantidadPool);
             }
-            
+
         } else if (cantidadPool > cantidadActual) {
             crearNuevasConexiones(cantidadPool);
+        }
+    }
+
+    /**
+     * Cuando detecta un cambio, setea los nuevos datos del archivo de
+     * configuracion
+     *
+     * @param nuevoConexion
+     */
+    private void hacerCambiosEnConexion(DatosBD nuevoConexion) {
+        for (DatosBD conexion : conexiones) {
+            conexion.setIp(nuevoConexion.getIp());
+            conexion.setNombreBD(nuevoConexion.getNombreBD());
+            conexion.setPuerto(nuevoConexion.getPuerto());
+            conexion.setPassword(nuevoConexion.getPassword());
+            conexion.setUsuario(nuevoConexion.getUsuario());
         }
     }
 
@@ -132,11 +134,11 @@ public class PoolManager extends Thread {
      */
     private void crearNuevasConexiones(int cantidad) {
         while (conexiones.size() < cantidad) {
-            //!!!!!!!!!!!
 
-            ConexionBD nueva = new ConexionBD(info.getIp(),
-                    info.getPuerto(), info.getNombreBD(),
-                    info.getUsuario(), info.getPassword());
+            DatosBD nueva = new DatosBD(informacionBD.getTamPool(), 
+                    informacionBD.getNombreBD(), informacionBD.getIp(),
+                    informacionBD.getPuerto(), informacionBD.getUsuario(), 
+                    informacionBD.getPassword());
             conexiones.add(nueva);
         }
     }
@@ -146,15 +148,15 @@ public class PoolManager extends Thread {
      *
      * @return
      */
-    public ConexionBD brindarConexion() {
-        for (ConexionBD conexion : conexiones) {
-            if (!conexion.IsActivo()) {
+    public DatosBD brindarConexion() {
+        for (DatosBD conexion : conexiones) {
+            if (!conexion.isIsActivo()) {
                 conexion.setIsActivo(true);
                 return conexion;
             }
         }
-        
+
         return null;
     }
-    
+
 }

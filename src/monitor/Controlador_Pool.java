@@ -17,7 +17,7 @@ public class Controlador_Pool {
         manager.start();
     }
     
-    public ConexionBD pedirConexion(){
+    public DatosBD pedirConexion(){
         return manager.brindarConexion();
     }
     

@@ -74,7 +74,7 @@ public class AdminMonitor {
 
     /**
      * Metodo que lee el archivo de configuracion y setea los campos con su
-     * respectivo dato
+     * respectivo dato.
      *
      * @return
      */

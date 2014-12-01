@@ -17,6 +17,7 @@ public class DatosBD {
     private int puerto;
     private String usuario;
     private String password;
+    private boolean isActivo = false;
 
     public DatosBD() {}
 
@@ -113,9 +114,25 @@ public class DatosBD {
         this.puerto = puerto;
     }
 
+    /**
+     * @return the isActivo
+     */
+    public boolean isIsActivo() {
+        return isActivo;
+    }
+
+    /**
+     * @param isActivo the isActivo to set
+     */
+    public void setIsActivo(boolean isActivo) {
+        this.isActivo = isActivo;
+    }
+
     @Override
     public String toString() {
-        return "DatosModificados{" + "tamPool=" + tamPool + ", nombreBD=" + nombreBD + ", ip=" + ip + ", usuario=" + usuario + ", password=" + password + ", puerto=" + puerto + '}';
+        return "DatosBD{" + "tamPool=" + tamPool + ", nombreBD=" + nombreBD + 
+                ", ip=" + ip + ", puerto=" + puerto + ", usuario=" + usuario +
+                ", password=" + password + ", isActivo=" + isActivo + '}';
     }
 
 }
