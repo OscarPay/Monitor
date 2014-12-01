@@ -26,7 +26,8 @@ public class DatosBD {
         this.nombreBD = nombreBD;
         this.ip = ip;
         this.usuario = usuario;
-        this.password = password;
+        if(password.equals("\"\"")) this.password = "";
+        else this.password = password;
         this.puerto = puerto;
     }
 

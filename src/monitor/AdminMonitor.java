@@ -106,11 +106,12 @@ public class AdminMonitor {
                     port = Integer.parseInt(configuracion[2]);
                     user = configuracion[3];
                     password = configuracion[4];
-
                     if (pool == 0) {
                         pool = 1;
                     }
                     informacion = crearCambio(pool, name, ip, port, user, password);
+
+                    //informacion = crearCambio(pool, name, ip, port, user, password);
                     //llamamos esta función para comparar los datos
                     //(cámbiale el parámetro con el objeto o instancia que debes crear arriba)
                     //compararCambios(pool, name, ip, port, user, password);
@@ -157,8 +158,8 @@ public class AdminMonitor {
                 port = Integer.parseInt(configuracion[2]);
                 user = configuracion[3];
                 password = configuracion[4];
-
-                //creariamos un objeto o no sé qué quieras hacer con esa info :v
+                //System.out.println("La contraseña es: "+password);
+                
                 informacion = crearCambio(pool, name, ip, port, user, password);
                 //llamamos esta función para comparar los datos
                 //(cámbiale el parámetro con el objeto o instancia que debes crear arriba)

@@ -5,6 +5,9 @@
  */
 package monitor;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Oscar
@@ -21,8 +24,15 @@ public class Controlador_Pool {
         return manager.brindarConexion();
     }
     
-    public static void main(String[] args) {
-        Controlador_Pool c = new Controlador_Pool();
-        c.iniciarPool();
+    @Override
+    public void finalize(){
+        try {
+            super.finalize();
+            
+        } catch (Throwable ex) {
+            Logger.getLogger(Controlador_Pool.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
+ 
 }

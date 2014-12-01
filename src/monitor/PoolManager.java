@@ -56,10 +56,12 @@ public class PoolManager extends Thread {
                 Thread.sleep(5000);
                 if (monitor.hayModificacion()) {
                     monitor.setModificacion(false);
-
+                    System.out.println("Antes de la modificación***");
+                    System.out.println(informacionBD);
                     informacionBD = monitor.getInformacion();
                     actualizar(informacionBD);
-
+                    System.out.println("Después de la modificación***");
+                    System.out.println(informacionBD);
                     hacerCambiosEnConexion(informacionBD);
                 }
 
@@ -135,9 +137,9 @@ public class PoolManager extends Thread {
     private void crearNuevasConexiones(int cantidad) {
         while (conexiones.size() < cantidad) {
 
-            DatosBD nueva = new DatosBD(informacionBD.getTamPool(), 
+            DatosBD nueva = new DatosBD(informacionBD.getTamPool(),
                     informacionBD.getNombreBD(), informacionBD.getIp(),
-                    informacionBD.getPuerto(), informacionBD.getUsuario(), 
+                    informacionBD.getPuerto(), informacionBD.getUsuario(),
                     informacionBD.getPassword());
             conexiones.add(nueva);
         }
