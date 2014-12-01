@@ -24,13 +24,6 @@ public class ConexionBD{
         this.usuario = usuario;
     }
     
-    public void conectar(){
-        
-    }
-    
-    public void desconectar(){
-        
-    }
 
     /**
      * @return the HOST

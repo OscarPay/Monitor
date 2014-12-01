@@ -19,6 +19,7 @@ public class AdminMonitor {
 
     private Timer timer;
     private boolean modificacion = false;
+    private DatosBD informacion;
 
     public AdminMonitor() {
         this.timer = new Timer();
@@ -28,10 +29,11 @@ public class AdminMonitor {
     public DatosBD getInformacion() {
         return informacion;
     }
-    
+
     /**
      * Metodo que checa si el archivo configuracionBD.txt,
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     public void checkFile() throws IOException {
 
@@ -69,12 +71,13 @@ public class AdminMonitor {
     public boolean hayModificacion() {
         return modificacion;
     }
-    
-    /**
-     * Metodo que lee el archivo de configuracion y setea los campos con su respectivo dato
-     * @return 
-     */
 
+    /**
+     * Metodo que lee el archivo de configuracion y setea los campos con su
+     * respectivo dato
+     *
+     * @return
+     */
     public DatosBD cargarConfiguracion() {
         FileReader cambios;
         String[] configuracion;
@@ -103,9 +106,10 @@ public class AdminMonitor {
                     port = Integer.parseInt(configuracion[2]);
                     user = configuracion[3];
                     password = configuracion[4];
-                    
-                    //creariamos un objeto o no sé qué quieras hacer con esa info :v
-                    if(pool == 0) pool = 1;
+
+                    if (pool == 0) {
+                        pool = 1;
+                    }
                     informacion = crearCambio(pool, name, ip, port, user, password);
                     //llamamos esta función para comparar los datos
                     //(cámbiale el parámetro con el objeto o instancia que debes crear arriba)
@@ -124,11 +128,11 @@ public class AdminMonitor {
         this.modificacion = modificacion;
     }
 
-    DatosBD informacion = null;
     /**
-     * Metodo que  actualiza cambios en la variable informacion
+     * Metodo que actualiza cambios en la variable informacion
+     *
      * @param file
-     * @throws IOException 
+     * @throws IOException
      */
     public void getCambios(File file) throws IOException {
         FileReader cambios;
@@ -165,7 +169,8 @@ public class AdminMonitor {
         }
     }
 
-    private DatosBD crearCambio(int tamPool, String nombreBD, String ip, int puerto, String usuario, String password) {
+    private DatosBD crearCambio(int tamPool, String nombreBD,
+            String ip, int puerto, String usuario, String password) {
         return new DatosBD(tamPool, nombreBD, ip, puerto, usuario, password);
     }
 
