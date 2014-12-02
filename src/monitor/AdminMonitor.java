@@ -60,7 +60,7 @@ public class AdminMonitor {
         };
 
         // repeat the check 5 second
-        timer.schedule(task, new Date(), 5000);
+        timer.schedule(task, new Date(), 10000);
     }
 
     public void stopCheck() {

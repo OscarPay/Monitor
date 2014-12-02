@@ -151,14 +151,14 @@ public class PoolManager extends Thread {
      * @return
      */
     public DatosBD brindarConexion() {
-        for (DatosBD conexion : conexiones) {
+        /*for (DatosBD conexion : conexiones) {
             if (!conexion.isIsActivo()) {
                 conexion.setIsActivo(true);
                 return conexion;
             }
-        }
-
-        return null;
+        }*/
+        informacionBD.setIsActivo(true);
+        return informacionBD;
     }
 
 }
