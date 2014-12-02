@@ -5,15 +5,16 @@
  */
 package monitor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Oscar
  */
 public class Controlador_Pool {
-    private PoolManager manager = new PoolManager();
+    private PoolManager manager;
+
+    public Controlador_Pool() {
+        manager = new PoolManager();
+    }
     
     
     public void iniciarPool(){
@@ -23,16 +24,4 @@ public class Controlador_Pool {
     public DatosBD pedirConexion(){
         return manager.brindarConexion();
     }
-    
-    @Override
-    public void finalize(){
-        try {
-            super.finalize();
-            
-        } catch (Throwable ex) {
-            Logger.getLogger(Controlador_Pool.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
- 
 }
