@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package monitor;
 
 import java.io.*;
@@ -51,7 +46,7 @@ public class AdminMonitor {
                 System.out.println(format.format(lastModified));
 
                 try {
-                    getCambios(file);
+                    obtenerCambios(file);
                     modificacion = true;
                 } catch (IOException ex) {
                     Logger.getLogger(AdminMonitor.class.getName()).log(Level.SEVERE, null, ex);
@@ -79,49 +74,14 @@ public class AdminMonitor {
      * @return
      */
     public DatosBD cargarConfiguracion() {
-        FileReader cambios;
-        String[] configuracion;
-        String linea, ip, name, password, user;
-        int port, pool = 0;
+        File archivo = new File("configuracionBD.txt");
         try {
-            cambios = new FileReader("configuracionBD.txt");
-            BufferedReader br = new BufferedReader(cambios);
-            try {
-                //La primera línea corresponde al tamaño del pool
-                pool = Integer.parseInt(br.readLine());
-                //si tienes una función con la que haces algo
-                //con el tamaño del pool, hazlo aquí o llámalo aquí
-            } catch (IOException ex) {
-                Logger.getLogger(AdminMonitor.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            try {
-                //esto es para checar línea por línea, separar las palabras en ese orden
-                // (te dejo el txt con ejemplo del formato)
-                // y asignarlas a los temp de atributos que necesita tu conexión
-                while ((linea = br.readLine()) != null) {
-                    configuracion = linea.split(" ");
-                    name = configuracion[0];
-                    ip = configuracion[1];
-                    port = Integer.parseInt(configuracion[2]);
-                    user = configuracion[3];
-                    password = configuracion[4];
-                    if (pool == 0) {
-                        pool = 1;
-                    }
-                    informacion = crearCambio(pool, name, ip, port, user, password);
-
-                    //informacion = crearCambio(pool, name, ip, port, user, password);
-                    //llamamos esta función para comparar los datos
-                    //(cámbiale el parámetro con el objeto o instancia que debes crear arriba)
-                    //compararCambios(pool, name, ip, port, user, password);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(AdminMonitor.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (FileNotFoundException ex) {
+            obtenerCambios(archivo);
+        } catch (IOException ex) {
             Logger.getLogger(AdminMonitor.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+
         return informacion;
     }
 
@@ -130,12 +90,12 @@ public class AdminMonitor {
     }
 
     /**
-     * Metodo que actualiza cambios en la variable informacion
+     * Metodo que actualiza cambios en la variable informacion.
      *
      * @param file
      * @throws IOException
      */
-    public void getCambios(File file) throws IOException {
+    public void obtenerCambios(File file) throws IOException {
         FileReader cambios;
         String[] configuracion;
         String linea, ip, name, password, user;
@@ -145,12 +105,7 @@ public class AdminMonitor {
             BufferedReader br = new BufferedReader(cambios);
             //La primera línea corresponde al tamaño del pool
             pool = Integer.parseInt(br.readLine());
-            //si tienes una función con la que haces algo
-            //con el tamaño del pool, hazlo aquí o llámalo aquí
-
-            //esto es para checar línea por línea, separar las palabras en ese orden
-            // (te dejo el txt con ejemplo del formato)
-            // y asignarlas a los temp de atributos que necesita tu conexión
+          
             while ((linea = br.readLine()) != null) {
                 configuracion = linea.split(" ");
                 name = configuracion[0];
@@ -158,12 +113,9 @@ public class AdminMonitor {
                 port = Integer.parseInt(configuracion[2]);
                 user = configuracion[3];
                 password = configuracion[4];
-                //System.out.println("La contraseña es: "+password);
-                
-                informacion = crearCambio(pool, name, ip, port, user, password);
-                //llamamos esta función para comparar los datos
-                //(cámbiale el parámetro con el objeto o instancia que debes crear arriba)
-                //compararCambios(pool, name, ip, port, user, password);
+
+                if(pool <= 0) pool = 100;
+                informacion = crearCambio(pool, name, ip, port, user, password);                
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(AdminMonitor.class.getName()).log(Level.SEVERE, null, ex);
@@ -172,18 +124,7 @@ public class AdminMonitor {
 
     private DatosBD crearCambio(int tamPool, String nombreBD,
             String ip, int puerto, String usuario, String password) {
+        
         return new DatosBD(tamPool, nombreBD, ip, puerto, usuario, password);
     }
-
-    //esta función debes implementarla para checar la conexión según el criterio 
-    //único con el que vas a buscarlas para comparar si lo que se leyó en esta línea es distinto
-    //deberías pensar en algo que hacer si ese objeto no existe en tu listado de conexiones
-    // para agregarla :v
-    //Mientras, sólo imprime los datos que separó en el método anterior
-    public void compararCambios(int pool, String name, String ip, int port, String user, String password) {
-        System.out.println(pool + "\n" + name + "\n" + ip + "\n"
-                + port + "\n" + user + "\n"
-                + password);
-    }
-
 }

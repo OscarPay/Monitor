@@ -12,23 +12,24 @@ import java.util.*;
  *
  * @author Vanessa
  */
-public abstract class MonitorDeArchivoDeConfiguracion extends TimerTask{
-      private long timeStamp;
-      private File file;
+public abstract class MonitorDeArchivoDeConfiguracion extends TimerTask {
 
-      public MonitorDeArchivoDeConfiguracion( File file ) {
+    private long timeStamp;
+    private File file;
+
+    public MonitorDeArchivoDeConfiguracion(File file) {
         this.file = file;
         this.timeStamp = file.lastModified();
-      }
+    }
 
-      public final void run() {
+    public final void run() {
         long timeStamp = file.lastModified();
 
-        if( this.timeStamp != timeStamp ) {
-          this.timeStamp = timeStamp;
-          onChange(file);
+        if (this.timeStamp != timeStamp) {
+            this.timeStamp = timeStamp;
+            onChange(file);
         }
-      }
+    }
 
-      protected abstract void onChange( File file );
+    protected abstract void onChange(File file);
 }

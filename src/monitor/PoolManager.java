@@ -23,7 +23,7 @@ public class PoolManager extends Thread {
     /**
      * Constructor que se encarga de inicializar el pool con las conexiones
      * segun el archivo, la informacion con los datos del archivo, y thread que
-     * checa cada 5 segundos el archivo para confirmar si hay cambios
+     * checa cada 5 segundos el archivo para confirmar si hay cambios.
      */
     public PoolManager() {
         try {
@@ -34,6 +34,7 @@ public class PoolManager extends Thread {
             informacionBD = monitor.cargarConfiguracion();
             iniciarPool(informacionBD);
 
+            //empieza a censar el archivo:
             monitor.checkFile();
 
         } catch (IOException ex) {
@@ -93,7 +94,6 @@ public class PoolManager extends Thread {
             //se reduce
             ArrayList<DatosBD> conexionesNuevas = new ArrayList<>();
             for (DatosBD conexion : conexiones) {
-                //!!!!!!!!Verificar
                 if (!conexion.isIsActivo()) {
                     conexionesNuevas.add(conexion);
                     if (conexionesNuevas.size() == cantidadPool) {
@@ -152,16 +152,7 @@ public class PoolManager extends Thread {
      */
     public DatosBD brindarConexion() {
         informacionBD.setIsActivo(true);
-        /*
-        for (DatosBD conexion : conexiones) {
-            if (!conexion.isIsActivo()) {
-                conexion.setIsActivo(true);
-                return conexion;
-            }
-        }
-*/
         return informacionBD;
-        //return null;
     }
 
 }
